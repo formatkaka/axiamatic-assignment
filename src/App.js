@@ -9,11 +9,15 @@ export default function App() {
     <div className='onboarding'>
       <SelectedProducts products={products} />
       <div className='search__container'>
-        <div>
+        <div className='search__inner'>
           <p>1 of 3</p>
-          <h3>Let's add your internal tools</h3>
-          <p>Search to quickly add products</p>
+          <h2>Let's add your internal tools</h2>
+          <p>
+            Search to quickly add products your team uses today. You'll be able
+            to add as many as you need later but for now let's add four.
+          </p>
           <Dropdown />
+          <button className='next-btn'>Next</button>
         </div>
       </div>
     </div>
@@ -44,21 +48,16 @@ function SelectedProducts(props) {
         </div>
       ))}
       {new Array(4 - products.length).fill(null).map(() => (
-        <div className='product'>
-          <img
-            className='product__placeholder'
-            src='./icons8-plus.svg'
-            alt='Add Logo'
-          />
-          {/* <p>{product.name}</p>
-                <button>
-                  <img src='./icons8-close.svg' alt='close' />
-                  <p>Remove</p>
-                </button> */}
+        <div className='product fbca'>
+          <div className='product__placeholder'>
+            <img
+              className='product__placeholder-img'
+              src='./icons8-plus.svg'
+              alt='Add Logo'
+            />
+          </div>
         </div>
       ))}
     </div>
   );
-
-  return null;
 }
