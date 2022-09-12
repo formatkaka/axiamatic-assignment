@@ -7,3 +7,5 @@ export const DROPDOWN_OPTIONS = {
   6: { name: 'Jira', logo: './jira-3.svg' },
   7: { name: 'Azure', logo: './azure-1.svg' },
 };
+
+export const MAX_PRODUCTS = 4;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Dropdown from './Dropdown';
 import './App.css';
-import { DROPDOWN_OPTIONS } from './utils/consts';
+import { DROPDOWN_OPTIONS, MAX_PRODUCTS } from './utils/consts';
 
 export default function App() {
   const [products, setProducts] = useState([]);
@@ -11,6 +11,9 @@ export default function App() {
       if (products.indexOf(option) > -1) {
         return products.filter((id) => id !== option);
       }
+
+      if (products.length === MAX_PRODUCTS) return products;
+
       return [...products, option];
     });
   }
@@ -29,7 +32,7 @@ export default function App() {
           <Dropdown products={products} updateProducts={updateProducts} />
           <button
             className={`next-btn ${
-              products.length === 4 ? 'next-btn__active' : ''
+              products.length === MAX_PRODUCTS ? 'next-btn__active' : ''
             }`}
           >
             Next
@@ -73,17 +76,23 @@ function SelectedProducts(props) {
           </button>
         </div>
       ))}
-      {new Array(4 - products.length).fill(null).map(() => (
-        <div className='product fbca'>
-          <div className='product__placeholder'>
-            <img
-              className='product__placeholder-img'
-              src='./icons8-plus.svg'
-              alt='Add Logo'
-            />
-          </div>
-        </div>
-      ))}
+      {new Array(MAX_PRODUCTS - products.length)
+        .fill(null)
+        .map(() => ProductPlaceholder())}
+    </div>
+  );
+}
+
+function ProductPlaceholder() {
+  return (
+    <div className='product fbca'>
+      <div className='product__placeholder'>
+        <img
+          className='product__placeholder-img'
+          src='./icons8-plus.svg'
+          alt='Add Logo'
+        />
+      </div>
     </div>
   );
 }
