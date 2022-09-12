@@ -1,13 +1,23 @@
 import { useState } from 'react';
 import Dropdown from './Dropdown';
 import './App.css';
+import { DROPDOWN_OPTIONS } from './utils/consts';
 
 export default function App() {
   const [products, setProducts] = useState([]);
 
+  function updateProducts(option) {
+    setProducts((products) => {
+      if (products.indexOf(option) > -1) {
+        return products.filter((id) => id !== option);
+      }
+      return [...products, option];
+    });
+  }
+
   return (
     <div className='onboarding'>
-      <SelectedProducts products={products} />
+      <SelectedProducts products={products} updateProducts={updateProducts} />
       <div className='search__container'>
         <div className='search__inner'>
           <p>1 of 3</p>
@@ -16,8 +26,14 @@ export default function App() {
             Search to quickly add products your team uses today. You'll be able
             to add as many as you need later but for now let's add four.
           </p>
-          <Dropdown />
-          <button className='next-btn'>Next</button>
+          <Dropdown products={products} updateProducts={updateProducts} />
+          <button
+            className={`next-btn ${
+              products.length === 4 ? 'next-btn__active' : ''
+            }`}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
@@ -25,19 +41,29 @@ export default function App() {
 }
 
 function SelectedProducts(props) {
-  const { products } = props;
+  const { products, updateProducts } = props;
+
+  function deleteProduct(evt) {
+    const { productid } = evt.currentTarget.dataset;
+
+    updateProducts(productid);
+  }
 
   return (
     <div className='products__container'>
-      {products.map((product) => (
-        <div className='product'>
+      {products.map((productId) => (
+        <div key={productId} className='product product--filled fbca'>
           <img
             className='product__logo'
-            src={product.logo}
-            alt={`${product.name} Logo`}
+            src={DROPDOWN_OPTIONS[productId].logo}
+            alt={`${DROPDOWN_OPTIONS[productId].name} Logo`}
           />
-          <p className='product__name'>{product.name}</p>
-          <button className='remove'>
+          <p className='product__name'>{DROPDOWN_OPTIONS[productId].name}</p>
+          <button
+            className='remove'
+            data-productId={productId}
+            onClick={deleteProduct}
+          >
             <img
               className='remove__logo'
               src='./icons8-close.svg'

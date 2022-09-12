@@ -1,21 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
-
-const DROPDOWN_OPTIONS = [
-  {
-    name: 'Notion',
-    logo: './notion-2.svg',
-  },
-  { name: 'NopenSpeed', logo: './apple.svg' },
-  { name: 'Noimics', logo: './notion-2.svg' },
-  { name: 'NoyerBooks', logo: './notion-2.svg' },
-  { name: 'Slack', logo: './slack-new-logo.svg' },
-  { name: 'Jira', logo: './jira-3.svg' },
-  { name: 'Azure', logo: './azure-1.svg' },
-];
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { DROPDOWN_OPTIONS } from './utils/consts';
+import useOutclick from './utils/useOutClick';
 
 function Dropdown(props) {
+  const { products } = props;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const ref = useRef();
+
+  useOutclick(ref, onBlur);
 
   function search(evt) {
     setSearchQuery(evt.target.value);
@@ -29,14 +23,23 @@ function Dropdown(props) {
     setIsFocused(false);
   }
 
+  function toggleSelection(evt) {
+    props.updateProducts(evt.currentTarget.dataset.option);
+  }
+
   const options = useMemo(() => {
-    return DROPDOWN_OPTIONS.filter(({ name }) => {
-      return name.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+    return Object.keys(DROPDOWN_OPTIONS).filter((key) => {
+      const searchMatches =
+        DROPDOWN_OPTIONS[key].name
+          .toLowerCase()
+          .indexOf(searchQuery.toLowerCase()) > -1;
+
+      return searchMatches;
     });
   }, [searchQuery]);
 
   return (
-    <div className='search'>
+    <div ref={ref} className='search'>
       <div className='search__input-container'>
         <img
           className='search__input-logo'
@@ -46,27 +49,44 @@ function Dropdown(props) {
         <input
           className='search__input'
           placeholder='Search for any software ...'
-          onFocus={onFocus}
-          onBlur={onBlur}
           onChange={search}
+          onFocus={onFocus}
           type='text'
         />
       </div>
       {isFocused && (
-        <div className='search__dropdown'>
-          {options.map((option) => {
-            return (
-              <div className='dropdown-row'>
-                <img
-                  className='dropdown-row__img'
-                  src={option.logo}
-                  alt={`${option.name} Logo`}
-                />
-                <p>{option.name}</p>
-              </div>
-            );
-          })}
-        </div>
+        <>
+          <div onClick={onBlur} className='Invisible'></div>
+          <div className='search__dropdown'>
+            {options.map((optionId) => {
+              const isSelected = products.indexOf(optionId) > -1;
+              return (
+                <div
+                  className={`dropdown-row ${
+                    isSelected ? 'dropdown-row--selected' : ''
+                  }`}
+                  data-option={optionId}
+                  onClick={toggleSelection}
+                  key={optionId}
+                >
+                  <img
+                    className='dropdown-row__img'
+                    src={DROPDOWN_OPTIONS[optionId].logo}
+                    alt={`${DROPDOWN_OPTIONS[optionId].name} Logo`}
+                  />
+                  <p>{DROPDOWN_OPTIONS[optionId].name}</p>
+                  {isSelected && (
+                    <img
+                      className='dropdown-row__tick'
+                      src='./tick.svg'
+                      alt='tick'
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );
