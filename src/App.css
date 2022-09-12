@@ -54,6 +54,7 @@ p{
 
 .next-btn__active {
   background-color: rgb(80,114,246);
+  cursor: pointer;
 }
 
 /* *************** PRODUCTS_SELECTED ***************  */
@@ -141,6 +142,9 @@ p{
 
   box-sizing: border-box;
   margin-top: 20px;
+
+  height: 180px;
+  overflow-y: scroll;
 }
 
 .search__input-container {
@@ -214,4 +218,47 @@ button, input {
   top: 0;
   width: 100vw;
   z-index: -9999999;
+}
+
+
+/* *************** MOBILE UI ***************  */
+
+@media (max-width: 600px){
+
+  .onboarding{
+    flex-direction: column;
+    align-items: center;
+    width: 95vw;
+    height: 90vh;
+    margin-top: 5vh;
+    gap: 20px;
+  }
+
+  .products__container{
+    width: 80vw;
+    height: 80vw;
+  }
+
+  .search__container {
+    width: 80vw;
+
+  }
+
+  .search{
+    margin-top: 20px;
+  }
+
+  h2{
+    margin: 10px 0px;
+  }
+
+  .search__dropdown {
+    top: unset;
+    bottom: 45px;
+  }
+
+  .product__logo{
+    margin-top: 10%;
+  }
+
 }
